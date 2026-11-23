@@ -26,9 +26,16 @@ DATASETS = ("tiny_imagenet", "cifar100")
 
 
 def _parse_value(text):
+    """--set values: Python literals (1e-3, None, ['knn']) or YAML, as in the config files.
+    YAML lets a list be written without quotes, e.g. PROTOCOLS=[knn,linear_probe],
+    which is much easier to type in a shell or a Colab cell."""
     try:
         return ast.literal_eval(text)
     except (ValueError, SyntaxError):
+        pass
+    try:
+        return yaml.safe_load(text)
+    except yaml.YAMLError:
         return text
 
 
