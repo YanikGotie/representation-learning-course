@@ -1,0 +1,9 @@
+# A2/A5: k-NN and linear probe on the last conv map pooled to 4x4 (1024-d) instead of h.
+# Rows are tagged "random@conv". Fine-tuning always uses h, so it is not repeated here.
+MODEL_NAME: evaluate
+RUN_NAME: evaluate_random_conv
+TAG: random
+ENCODER_PATH: random
+LATENT_DIM_FROM: checkpoints/pretrain_dae/encoder.pt
+PROTOCOLS: [knn, linear_probe]
+FEATURE_LAYER: conv

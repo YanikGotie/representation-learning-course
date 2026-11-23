@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+
+dataset/
+tb_logs/
+checkpoints/
+*.ckpt
+*.pt
+results/tune_journal.log*
+
+.DS_Store
+.vscode/

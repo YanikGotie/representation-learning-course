@@ -1,0 +1,8 @@
+# A3 baseline: random-init encoder, FROZEN (what the architecture gives for free).
+# Fine-tuning a random encoder is the supervised-from-scratch baseline (evaluate_scratch.yaml).
+MODEL_NAME: evaluate
+RUN_NAME: evaluate_random
+TAG: random
+ENCODER_PATH: random
+LATENT_DIM_FROM: checkpoints/pretrain_dae/encoder.pt
+PROTOCOLS: [knn, linear_probe]

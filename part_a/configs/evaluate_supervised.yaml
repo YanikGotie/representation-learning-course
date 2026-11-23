@@ -1,0 +1,6 @@
+# Frozen features of the supervised reference encoder (supervised.yaml): k-NN and linear probe.
+MODEL_NAME: evaluate
+RUN_NAME: evaluate_supervised
+TAG: supervised
+ENCODER_PATH: checkpoints/supervised/encoder.pt
+PROTOCOLS: [knn, linear_probe]

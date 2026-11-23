@@ -1,0 +1,13 @@
+pytorch-lightning
+torchmetrics
+tensorboard
+matplotlib
+numpy
+pandas
+pyyaml
+optuna>=4.0
+scipy
+scikit-learn
+tabulate
+pillow
+datasets  # only for DATA_SOURCE="hf" (zh-plus/tiny-imagenet)

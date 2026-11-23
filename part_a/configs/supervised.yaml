@@ -1,0 +1,7 @@
+# Supervised reference encoder: SupervisedEncoder (same encoder as the DAE) trained from scratch
+# with 100% of the Tiny-ImageNet labels. evaluate_supervised.yaml evaluates it frozen.
+MODEL_NAME: pretrain_supervise_encoder
+RUN_NAME: supervised
+DATASET: tiny_imagenet
+LATENT_DIM_FROM: checkpoints/pretrain_dae/encoder.pt
+ENCODER_PATH: checkpoints/supervised/encoder.pt

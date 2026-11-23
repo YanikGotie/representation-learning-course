@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Part A: Denoising-autoencoder representations</title>
+<style>
+  @page { size: A4; margin: 11mm 12.5mm 11mm 12.5mm; }
+  :root { --ink: #111; --muted: #555; --rule: #bbb; --accent: #2a78d6; }
+  html { background: #fff; }
+  body { font-family: "Charter", "Georgia", serif; font-size: 9pt; line-height: 1.26; color: var(--ink);
+         margin: 0; background: #fff; }
+  h1 { font-size: 14.5pt; margin: 0 0 1mm 0; }
+  .byline { color: var(--muted); font-size: 8.8pt; margin-bottom: 2.5mm; }
+  h2 { font-size: 10.4pt; margin: 2.2mm 0 0.8mm 0; border-bottom: 0.6pt solid var(--rule); padding-bottom: 0.5mm; }
+  h3 { font-size: 9.8pt; margin: 2mm 0 0.6mm 0; }
+  p { margin: 0 0 1.4mm 0; text-align: justify; hyphens: auto; }
+  ul { margin: 0 0 1.4mm 0; padding-left: 4.5mm; }
+  li { margin: 0 0 0.6mm 0; text-align: justify; }
+  table { border-collapse: collapse; font-size: 7.5pt; line-height: 1.22; margin: 1mm 0 1.6mm 0; width: 100%; }
+  th, td { white-space: nowrap; padding: 0.35mm 1.1mm; text-align: center; border-bottom: 0.4pt solid #ddd; }
+  th { border-bottom: 0.8pt solid #888; font-weight: 600; }
+  td:first-child, th:first-child { text-align: left; }
+  tr.sep td { border-top: 0.8pt solid #888; }
+  .b { font-weight: 700; }
+  .cap { font-size: 7.6pt; color: #333; margin: 0.6mm 0 2mm 0; text-align: justify; }
+  .cap b { color: var(--ink); }
+  figure { margin: 1mm 0 0 0; break-inside: avoid; }
+  figure img { width: 100%; display: block; }
+  .row { display: flex; gap: 4mm; align-items: flex-start; }
+  .row > * { flex: 1; min-width: 0; }
+  .eq { text-align: center; margin: 1mm 0 1.4mm 0; font-style: italic; }
+  .small { font-size: 8pt; }
+  .page-break { break-before: page; }
+  code { font-family: "Menlo", monospace; font-size: 7.8pt; }
+  .refs p { font-size: 8pt; margin-bottom: 0.8mm; text-align: left; }
+</style>
+</head>
+<body>
+
+<h1>Part A: What does a denoising autoencoder learn on Tiny-ImageNet?</h1>
+<div class="byline">Yanik · Representation Learning, midterm Part A · code, configs and logs:
+github.com/YanikGotie/representation-learning-course/tree/master/part_a · every number below is traced to a file in <code>results/</code></div>
+
+<p><b>Summary.</b> A denoising autoencoder (DAE) with 70% block masking, tuned by validation k-NN, gives a
+bottleneck representation that beats every unsupervised baseline on both frozen protocols and both datasets, but by
+only 1–3 points; it is far below a supervised encoder, does not help fine-tuning, and its conv features are no
+better than random ones. Its clearest advantage is robustness to occlusion.</p>
+
+<h2>1. Methods</h2>
+<p><b>Data and splits.</b> Tiny-ImageNet (200 classes, 64×64). <i>Train</i> = 90k images (450/class);
+<i>validation</i> = 50 images/class held out of the official train split, used for <i>all</i> tuning and model
+selection; <i>test</i> = the official labelled val set (10k), used only for final numbers. Images come from the
+dataset's original zip, identical to <code>zh-plus/tiny-imagenet</code> (Hugging Face was blocked on our network).
+Labels never enter pre-training. Transfer: CIFAR-100 (45k train / 5k val / 10k test), resized
+32→64 (bilinear, antialiased). Label subsets 1/10/100% are class-balanced (5/45/450 per class), drawn once with
+seed 42 and identical for every model.</p>
+
+<p><b>Code.</b> <code>part_a/</code> starts as a copy of the course's <code>lec5/</code> and extends its pipeline:
+lec5's <code>AutoEncoder</code> gains the corruption step (A1), its <code>EncoderClassifier</code> does the linear
+probe and fine-tuning, and <code>SupervisedEncoder</code> is the supervised baseline. Every run is the course
+<code>train.py</code> with its own config file.</p>
+<p><b>Model (A1).</b> Encoder f<sub>θ</sub> = the course small encoder adapted to RGB 64×64:
+Conv(3→32, s2)–ReLU–Conv(32→64, s2)–ReLU–Flatten–Linear(16384→d). Light decoder g<sub>φ</sub> =
+Linear(d→16384)–ReLU–ConvT(64→32, s2)–ReLU–ConvT(32→3, s2), linear output. Pixels x ∈ [0,1]; the encoder sees
+the normalized corrupted image. Loss:</p>
+<div class="eq">L<sub>DAE</sub>(θ, φ) = E<sub>x</sub> E<sub>x̃ ∼ q(·|x)</sub> ‖ x − g<sub>φ</sub>(f<sub>θ</sub>(x̃)) ‖²<sub>2</sub> &nbsp; (mean over pixels)</div>
+<p>Corruptions q: Gaussian noise (std σ), <b>block masking</b> (each 8×8 block zeroed with probability p) and
+salt-and-pepper (fraction p of pixels set to 0/1); q = identity gives the plain AE. AdamW, cosine schedule,
+batch 256, 16-bit mixed precision; the checkpoint with the best validation k-NN accuracy is kept.</p>
+
+<p><b>Tuning (A2).</b> Optuna TPE (seed 42), 30 trials, in a proxy setting (150 images/class, 15 epochs);
+objective = validation k-NN top-1 with the full 90k train split as memory bank; validation reconstruction MSE (on
+clean inputs) is logged for every trial. The corruption type is a hyperparameter, so the search also covers the
+plain AE. The DAE is the best trial with a corruption; the plain AE uses the same settings with no corruption.
+Final models are trained in the full setting (90k images, 40 epochs).</p>
+
+<table>
+<tr><th>Hyperparameter</th><th>Search range</th><th>Selected (DAE)</th><th>Fixed settings</th><th>Value</th></tr>
+<tr><td>corruption</td><td>{gaussian, mask, salt-pepper, none}</td><td class="b">mask</td><td>batch size</td><td>256</td></tr>
+<tr><td>noise level (σ or p)</td><td>σ∈[.05,.5]; p<sub>mask</sub>∈[.1,.75]; p<sub>s&amp;p</sub>∈[.05,.5]</td><td class="b">p = 0.70</td><td>epochs (proxy / final)</td><td>15 / 40</td></tr>
+<tr><td>latent dim d</td><td>{64, 128, 256, 512}</td><td class="b">256</td><td>supervised encoder</td><td>fine-tune recipe, 20 ep</td></tr>
+<tr><td>learning rate</td><td>[1e-4, 3e-3], log</td><td class="b">8.5e-4</td><td>fine-tune (all weights)</td><td>AdamW 1e-3, wd 5e-4, crop+flip</td></tr>
+<tr><td>weight decay</td><td>[1e-6, 1e-2], log</td><td class="b">3.7e-3</td><td>fine-tune epochs 1/10/100%</td><td>100 / 40 / 20</td></tr>
+</table>
+
+<p><b>Evaluation protocol.</b> <i>k-NN</i>: ℓ<sub>2</sub>-normalized h, cosine similarity, k = 20,
+similarity-weighted vote, bank = full labelled train split. <i>Linear probe</i>: f<sub>θ</sub> frozen, features
+standardized, one linear layer trained with cross-entropy (AdamW, 30 epochs, ≥1500 steps), weight decay ∈
+{0, 1e-4, 1e-3} chosen on validation. <i>Fine-tuning</i>: all weights plus a linear head on 1/10/100% of the
+labels; the epoch is chosen on validation top-1. All protocols run on Tiny-ImageNet and CIFAR-100; we report test
+top-1/top-5. <b>Baselines:</b> random-init encoder (frozen), plain AE, supervised encoder trained from scratch on
+the same label subsets (fine-tuning) and, for the frozen protocols, the encoder trained with 100% of the labels
+(an upper reference); raw pixels (16×16 average-pooled, 768-d) as an extra sanity baseline. All models share the
+architecture, d = 256, the splits and seed 42.</p>
+
+<h2>2. Results</h2>
+<h3>A2: Does better reconstruction mean a better representation? Which layer is h?</h3>
+<div class="row">
+<figure style="flex:1.25"><img src="../results/figures/a2_recon_vs_knn.png">
+<p class="cap"><b>Figure 1.</b> All 30 tuning trials (proxy setting). Left: validation reconstruction MSE vs
+validation k-NN top-1 (Spearman ρ = −0.19, p = 0.33). Right: k-NN vs corruption strength. Best per corruption:
+mask 7.22%, none 6.86%, Gaussian 6.74%, salt-and-pepper 6.67%.</p></figure>
+<div>
+<p><b>No.</b> Across trials, lower reconstruction error does not predict higher k-NN accuracy (Fig. 1). The same
+holds within and between the final runs: the DAE's k-NN peaks at epoch 6 (7.3%) and drifts to 6.9% while its
+reconstruction MSE keeps falling (0.020 → 0.015), and the plain AE reconstructs better than the DAE (MSE 0.012 vs
+0.020) yet has the worse representation (6.3% vs 7.3%). Reconstruction rewards keeping colour and layout, which is
+not what separates the classes. Masking holds the 8 best trials.</p>
+</div></div>
+<p><b>h = the 256-d bottleneck</b> (Linear output): the representation the course encoder defines and the input of
+the fine-tuning head, fixed before seeing results. We also ran the frozen protocol on the last conv map,
+average-pooled to 4×4 (1024-d; Table A1). For every unsupervised encoder it is <i>better</i> (Tiny-ImageNet linear
+probe: DAE 9.4 → 14.5, AE 7.3 → 17.6, random 7.1 → 15.5); only the supervised encoder is better at h on its own task
+(29.0 vs 27.5). The bottleneck throws class information away; see Section 3.</p>
+
+<h3>A3: Comparison with the baselines</h3>
+<table>
+<tr><th rowspan="2">Test top-1 / top-5 (%)</th><th colspan="5">Tiny-ImageNet</th><th colspan="4">CIFAR-100 (transfer)</th></tr>
+<tr><th>k-NN</th><th>LP 1%</th><th>LP 100%</th><th>FT 10%</th><th>FT 100%</th><th>k-NN</th><th>LP 100%</th><th>FT 10%</th><th>FT 100%</th></tr>
+<tr><td class="b">DAE (ours)</td><td class="b">7.1 / 18.1</td><td class="b">2.3 / 8.6</td><td class="b">9.4 / 24.9</td><td class="b">13.7 / 33.0</td><td>29.7 / 55.1</td><td class="b">20.1 / 42.8</td><td class="b">21.3 / 45.5</td><td class="b">23.5 / 50.5</td><td class="b">44.9 / 73.5</td></tr>
+<tr><td>Plain AE</td><td>5.8 / 15.8</td><td>2.1 / 8.2</td><td>7.3 / 20.7</td><td>13.1 / 31.0</td><td class="b">30.7 / 55.5</td><td>18.2 / 39.7</td><td>18.9 / 41.0</td><td>23.5 / 49.1</td><td>43.7 / 72.9</td></tr>
+<tr><td>Random init (frozen)</td><td>4.4 / 12.4</td><td>2.1 / 7.7</td><td>7.1 / 20.1</td><td>–</td><td>–</td><td>17.3 / 38.6</td><td>19.9 / 43.6</td><td>–</td><td>–</td></tr>
+<tr><td>Raw pixels</td><td>6.1 / 15.5</td><td>2.1 / 8.2</td><td>7.6 / 20.1</td><td>–</td><td>–</td><td>18.6 / 40.9</td><td>18.9 / 41.5</td><td>–</td><td>–</td></tr>
+<tr><td>Supervised from scratch</td><td>–</td><td>–</td><td>–</td><td>12.4 / 30.0</td><td>30.1 / 55.3</td><td>–</td><td>–</td><td>22.6 / 47.7</td><td>43.5 / 72.9</td></tr>
+<tr class="sep"><td>Supervised, frozen (100% labels)</td><td>27.0 / 50.0</td><td>13.6 / 33.7</td><td>29.0 / 53.9</td><td>–</td><td>–</td><td>34.1 / 60.4</td><td>37.8 / 67.0</td><td>–</td><td>–</td></tr>
+</table>
+<p class="cap" style="margin-top:-0.6mm"><b>Table 1.</b> LP = linear probe, FT = fine-tuning, with the given
+fraction of labels; best unsupervised result in bold. The frozen supervised encoder saw all Tiny-ImageNet labels: an
+upper reference, not a competitor. Remaining columns: Appendix.</p>
+
+<h3>A4: Label efficiency and robustness</h3>
+<div class="row">
+<figure style="flex:0.95"><img src="../results/figures/a4_label_efficiency.png">
+<p class="cap"><b>Figure 2.</b> Test top-1 vs label fraction. Fine-tuned DAE, plain AE and supervised-from-scratch
+are within ~1 point at every fraction; the frozen DAE + linear probe (dashed) is far below.</p></figure>
+<figure style="flex:1.05"><img src="../results/figures/a4_robustness.png">
+<p class="cap"><b>Figure 3 (bonus).</b> Linear probe trained on clean features, tested on corrupted test images
+(6 corruptions × 5 severities), as % of clean accuracy.</p></figure>
+</div>
+<p><b>Label efficiency.</b> Pre-training gives no measurable head start when all weights are trained: at 10% labels
+the DAE leads supervised-from-scratch by 1.3 (Tiny-ImageNet) and 0.9 points (CIFAR-100); at 1% and 100% the order
+changes, and all gaps are ≤1 point, within seed variation (Tiny-ImageNet 1%: 4.2 / 4.3 / 4.0; 100%: 29.7 / 30.7 / 30.1
+for DAE / AE / scratch).</p>
+<p><b>Bonus robustness test: test-time corruptions.</b> <i>Weakness probed:</i> whether h encodes the object or the
+exact pixels, i.e. whether a classifier trained on clean features still works when the input changes in ways that
+do not change the class. <i>Why it is fair:</i> probe, test images and
+corruption noise (fixed seed) are identical for every model, no probe sees corrupted images, results are relative to
+each model's clean accuracy, and severities follow ImageNet-C [Hendrycks &amp; Dietterich, 2019]. <i>Result:</i>
+under occlusion (10–50% of 8×8 blocks dropped) the DAE keeps 78% of its accuracy on average vs 43% (AE), 43% (pixels)
+and 33% (supervised), and is best even in absolute terms at the highest severity (5.2% vs 3.2% supervised, 1.8% AE):
+filling in masked blocks transferred to missing content at test time. The price is lower tolerance to pixel noise (Gaussian 82%
+vs AE 94%) and to global photometric changes (contrast 45% vs 61%, brightness 49% vs 65%). The supervised encoder
+collapses under blur and noise (39–42%): it relies on high-frequency texture.</p>
+
+<h2>3. Discussion (A5)</h2>
+<p><b>Better than what, and by how much?</b> On h, the DAE beats the plain AE (+1.3 k-NN, +2.1 LP on Tiny-ImageNet;
++1.9 / +2.4 on CIFAR-100), raw pixels (+1.0 / +1.8) and the random encoder (+2.7 / +2.3), so masking adds something
+the plain reconstruction objective does not. In absolute terms the representation is weak: 7.1% k-NN is 14× chance
+but a quarter of the supervised encoder's 27.0%, and the gain over raw pixels is about one point. Two results limit
+the claim further. (i) Fine-tuning erases the difference: all initialisations end within ~1 point. (ii) On the pooled
+conv features (Table A1) the DAE has <i>no</i> advantage: the plain AE is best (LP 17.6 vs 14.5) and even a random
+conv layer beats the DAE (15.5). What masking teaches is concentrated in the learned Linear bottleneck, which must
+summarize the whole image from 30% of it; the conv layers below it are not better than random filters, which are
+known to give
+strong features when read out by a high-dimensional linear probe.</p>
+<p><b>Do the protocols rank the models the same way?</b> The two frozen protocols agree: on Tiny-ImageNet k-NN and
+the linear probe give the identical order over all five models (Kendall τ = 1.0: supervised &gt; DAE &gt; pixels &gt;
+AE &gt; random). On CIFAR-100 they agree less (τ = 0.4) because the random encoder overtakes pixels and the AE under
+the linear probe: a learned linear readout can exploit many weak random features that cosine k-NN treats as
+noise. Fine-tuning ranks DAE, AE and supervised differently (τ = −0.33 against both frozen protocols). Fine-tuning changes every weight, so it measures the initialisation, not the representation;
+after 20–100 epochs the initialisation is largely forgotten and the remaining gaps (≤1 point) are within seed noise.</p>
+<p><b>Where does it fail?</b> <i>Classes:</i> with the linear probe 33 of 200 classes get 0% test accuracy
+(k-NN: 41). The best classes have a distinctive colour or shape on a uniform background (orange 42%, school bus
+40%, jellyfish 40%, police van 38%); the worst are fine-grained or thin objects (ox, bighorn, Labrador retriever,
+standard poodle, dumbbell, syringe). Per-class accuracy correlates with the supervised encoder's (r = 0.73), so the DAE
+succeeds on the "easy" classes, not on different ones. <i>Corruptions:</i> contrast and brightness changes and strong
+pixel noise (Fig. 3). <i>Domain:</i> the transfer gap to CIFAR-100 is similar to Tiny-ImageNet (+2.4 LP over the AE), so
+the representation is not specific to the source domain, but it stays far from supervised features (21.3 vs 37.8).</p>
+<p><b>Extra evidence.</b> Nearest-neighbour retrieval (Appendix, Fig. A1) shows why: the DAE's neighbours match the
+query's colour and layout (a red-lit scene retrieves other red images) and look much like the raw-pixel neighbours,
+while the supervised encoder retrieves teapots for a pitcher and pretzels for pretzels. t-SNE of 10 classes (Fig. 4)
+agrees: silhouette (cosine) is −0.048 for the DAE, −0.054 AE, −0.070 pixels, and only the supervised encoder is
+positive (0.030); the one tight DAE cluster is <i>snorkel</i>, a class defined by its blue-water background.</p>
+<figure><img src="../results/figures/a5_tsne.png"></figure>
+<p class="cap"><b>Figure 4.</b> t-SNE of validation features h for 10 random classes; titles give the cosine
+silhouette score in the full feature space. Only the supervised encoder forms class clusters.</p>
+<p><b>Limitations and next steps.</b> One seed per configuration (differences &lt; 1 point are not conclusive);
+tuning in the proxy setting selected an early-peaking model; a two-layer encoder with a linear bottleneck limits
+everything downstream. Next we would (1) report h from the pooled conv map or a deeper encoder (the
+<code>conv4</code> encoder is implemented), (2) repeat the final runs with 3 seeds, (3) try a masking objective
+closer to a context encoder (larger contiguous masks, loss only on masked pixels), and (4) compare with SimCLR in Part B
+on exactly these splits and protocols.</p>
+
+<div class="refs">
+<h2>References</h2>
+<p>Vincent, Larochelle, Bengio &amp; Manzagol (2008). Extracting and composing robust features with denoising autoencoders. ICML.</p>
+<p>Pathak, Krähenbühl, Donahue, Darrell &amp; Efros (2016). Context encoders: feature learning by inpainting. CVPR.</p>
+<p>Hendrycks &amp; Dietterich (2019). Benchmarking neural network robustness to common corruptions and perturbations. ICLR.</p>
+<p>Akiba, Sano, Yanase, Ohta &amp; Koyama (2019). Optuna: a next-generation hyperparameter optimization framework. KDD.</p>
+</div>
+
+<div class="page-break"></div>
+<h2>Appendix</h2>
+<p class="small"><b>Table A1.</b> Frozen protocols on the last conv map, average-pooled to 4×4 (1024-d), instead of h
+(<code>configs/evaluate_*_conv.yaml</code>). Test top-1 / top-5 (%).</p>
+<table>
+<tr><th rowspan="2">Encoder</th><th colspan="4">Tiny-ImageNet</th><th colspan="4">CIFAR-100</th></tr>
+<tr><th>k-NN</th><th>LP 1%</th><th>LP 10%</th><th>LP 100%</th><th>k-NN</th><th>LP 1%</th><th>LP 10%</th><th>LP 100%</th></tr>
+<tr><td>DAE</td><td>9.4 / 22.7</td><td>3.5 / 11.5</td><td>7.6 / 21.1</td><td>14.5 / 33.6</td><td>23.7 / 46.9</td><td>8.2 / 24.4</td><td>18.5 / 41.8</td><td>30.3 / 59.2</td></tr>
+<tr><td>Plain AE</td><td>10.1 / 23.4</td><td>4.5 / 13.9</td><td>9.1 / 24.6</td><td>17.6 / 38.1</td><td>24.9 / 48.6</td><td>9.9 / 26.9</td><td>20.7 / 44.9</td><td>33.1 / 62.0</td></tr>
+<tr><td>Random init</td><td>7.7 / 19.3</td><td>3.7 / 11.9</td><td>7.6 / 22.0</td><td>15.5 / 34.2</td><td>20.5 / 41.9</td><td>8.8 / 25.4</td><td>18.7 / 41.6</td><td>31.0 / 58.4</td></tr>
+<tr><td>Supervised (frozen)</td><td>20.0 / 38.9</td><td>7.9 / 22.0</td><td>17.3 / 37.5</td><td>27.5 / 51.5</td><td>28.9 / 54.5</td><td>13.1 / 31.8</td><td>27.3 / 54.3</td><td>41.7 / 70.1</td></tr>
+</table>
+<p class="small"><b>Remaining Table 1 columns</b> (test top-1 / top-5, %). Tiny-ImageNet LP 10%: DAE 5.6 / 16.8, AE
+4.4 / 13.7, random 4.2 / 13.6, pixels 4.0 / 13.5, supervised (frozen) 24.4 / 48.6. FT 1%: DAE 4.2 / 12.8, AE 4.3 /
+13.1, scratch 4.0 / 12.3. CIFAR-100 LP 1%: DAE 7.0 / 20.9, AE 6.9 / 19.7, random 6.3 / 19.5, pixels 7.2 / 20.3;
+LP 10%: 14.5 / 34.4, 12.3 / 30.8, 13.6 / 34.0, 12.3 / 31.7; FT 1%: DAE 9.6 / 26.9, AE 9.8 / 27.6, scratch 9.2 / 25.6.</p>
+
+<div class="row" style="margin-top:2mm">
+<div>
+<figure><img src="../results/figures/a1_reconstructions.png"></figure>
+<p class="cap"><b>Figure A2.</b> Clean x, masked x̃ (p = 0.70), DAE reconstruction from x̃ and from x, and the plain
+AE's reconstruction. The DAE outputs a blurrier colour-and-layout summary; the AE keeps more detail.</p>
+</div>
+<div style="flex:0.8">
+<figure><img src="../results/figures/a5_per_class_scatter.png"></figure>
+<p class="cap"><b>Figure A3.</b> Per-class linear-probe test accuracy on h, DAE vs supervised encoder
+(r = 0.73); 33 classes are at 0% for the DAE.</p>
+</div>
+</div>
+<div class="page-break"></div>
+<figure><img src="../results/figures/a5_retrieval.png" style="width:47%; margin:0 auto;"></figure>
+<p class="cap" style="width:47%; margin-left:auto; margin-right:auto"><b>Figure A1.</b> Seven nearest neighbours
+(cosine on h) in the train split for six random test queries, for the DAE, raw pixels and the supervised encoder.
+Green = same class as the query.</p>
+
+</body>
+</html>

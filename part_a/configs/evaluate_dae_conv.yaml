@@ -1,0 +1,8 @@
+# A2/A5: k-NN and linear probe on the last conv map pooled to 4x4 (1024-d) instead of h.
+# Rows are tagged "dae@conv". Fine-tuning always uses h, so it is not repeated here.
+MODEL_NAME: evaluate
+RUN_NAME: evaluate_dae_conv
+TAG: dae
+ENCODER_PATH: checkpoints/pretrain_dae/encoder.pt
+PROTOCOLS: [knn, linear_probe]
+FEATURE_LAYER: conv

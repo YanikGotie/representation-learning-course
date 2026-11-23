@@ -1,0 +1,176 @@
+{
+ "linear": {
+  "worst": [
+   [
+    "dumbbell",
+    0.0
+   ],
+   [
+    "syringe",
+    0.0
+   ],
+   [
+    "bighorn",
+    0.0
+   ],
+   [
+    "ox",
+    0.0
+   ],
+   [
+    "chain",
+    0.0
+   ],
+   [
+    "Labrador retriever",
+    0.0
+   ],
+   [
+    "plunger",
+    0.0
+   ],
+   [
+    "standard poodle",
+    0.0
+   ],
+   [
+    "pole",
+    0.0
+   ],
+   [
+    "bannister",
+    0.0
+   ]
+  ],
+  "best": [
+   [
+    "orange",
+    0.42
+   ],
+   [
+    "school bus",
+    0.4
+   ],
+   [
+    "jellyfish",
+    0.4
+   ],
+   [
+    "police van",
+    0.38
+   ],
+   [
+    "lifeboat",
+    0.36
+   ],
+   [
+    "sulphur butterfly",
+    0.34
+   ],
+   [
+    "potpie",
+    0.34
+   ],
+   [
+    "pizza",
+    0.34
+   ],
+   [
+    "flagpole",
+    0.32
+   ],
+   [
+    "bullet train",
+    0.32
+   ]
+  ],
+  "zero_acc_classes": 33
+ },
+ "knn": {
+  "worst": [
+   [
+    "acorn",
+    0.0
+   ],
+   [
+    "potter's wheel",
+    0.0
+   ],
+   [
+    "pop bottle",
+    0.0
+   ],
+   [
+    "bannister",
+    0.0
+   ],
+   [
+    "pill bottle",
+    0.0
+   ],
+   [
+    "picket fence",
+    0.0
+   ],
+   [
+    "pay-phone",
+    0.0
+   ],
+   [
+    "parking meter",
+    0.0
+   ],
+   [
+    "nail",
+    0.0
+   ],
+   [
+    "miniskirt",
+    0.0
+   ]
+  ],
+  "best": [
+   [
+    "freight car",
+    0.5
+   ],
+   [
+    "jellyfish",
+    0.46
+   ],
+   [
+    "gazelle",
+    0.34
+   ],
+   [
+    "dugong",
+    0.32
+   ],
+   [
+    "flagpole",
+    0.3
+   ],
+   [
+    "black widow",
+    0.28
+   ],
+   [
+    "sulphur butterfly",
+    0.28
+   ],
+   [
+    "magnetic compass",
+    0.28
+   ],
+   [
+    "lifeboat",
+    0.26
+   ],
+   [
+    "orange",
+    0.26
+   ]
+  ],
+  "zero_acc_classes": 41
+ }
+}

@@ -1,0 +1,178 @@
+mode=evaluate run_name=evaluate_supervised_conv dataset=tiny_imagenet
+Seed set to 42
+[tiny_imagenet] train 90000 | val 10000 | test 10000 | bank 90000
+Seed set to 42
+{'tag': 'supervised@conv', 'dataset': 'tiny_imagenet', 'protocol': 'knn', 'label_fraction': 1.0, 'val_top1': 0.19670000672340393, 'val_top5': 0.3797999918460846, 'test_top1': 0.2003999948501587, 'test_top5': 0.38929998874664307}
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py:321: The number of training batches (2) is smaller than the logging interval Trainer(log_every_n_steps=20). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py:538: Found 7 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=750` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=750` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=750` reached.
+Training is done.
+{'tag': 'supervised@conv', 'dataset': 'tiny_imagenet', 'protocol': 'linear_probe', 'label_fraction': 0.01, 'val_top1': 0.0803999975323677, 'val_top5': 0.21899999678134918, 'test_top1': 0.07880000025033951, 'test_top5': 0.21950000524520874, 'info': '{"weight_decay": 0.001, "val_by_wd": {"0.0": 0.08030000329017639, "0.0001": 0.08030000329017639, "0.001": 0.0803999975323677}}'}
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py:321: The number of training batches (18) is smaller than the logging interval Trainer(log_every_n_steps=20). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py:538: Found 7 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=84` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=84` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=84` reached.
+Training is done.
+{'tag': 'supervised@conv', 'dataset': 'tiny_imagenet', 'protocol': 'linear_probe', 'label_fraction': 0.1, 'val_top1': 0.1657000035047531, 'val_top5': 0.374099999666214, 'test_top1': 0.17339999973773956, 'test_top5': 0.37470000982284546, 'info': '{"weight_decay": 0.0, "val_by_wd": {"0.0": 0.1657000035047531, "0.0001": 0.1657000035047531, "0.001": 0.1657000035047531}}'}
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py:538: Found 7 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+{'tag': 'supervised@conv', 'dataset': 'tiny_imagenet', 'protocol': 'linear_probe', 'label_fraction': 1.0, 'val_top1': 0.2669000029563904, 'val_top5': 0.5149999856948853, 'test_top1': 0.27549999952316284, 'test_top5': 0.5151000022888184, 'info': '{"weight_decay": 0.0001, "val_by_wd": {"0.0": 0.2667999863624573, "0.0001": 0.2669000029563904, "0.001": 0.2669000029563904}}'}
+[cifar100] train 45000 | val 5000 | test 10000 | bank 45000
+Seed set to 42
+{'tag': 'supervised@conv', 'dataset': 'cifar100', 'protocol': 'knn', 'label_fraction': 1.0, 'val_top1': 0.27619999647140503, 'val_top5': 0.5424000024795532, 'test_top1': 0.2892000079154968, 'test_top5': 0.5447999835014343}
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py:321: The number of training batches (1) is smaller than the logging interval Trainer(log_every_n_steps=20). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py:538: Found 7 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=1500` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=1500` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=1500` reached.
+Training is done.
+{'tag': 'supervised@conv', 'dataset': 'cifar100', 'protocol': 'linear_probe', 'label_fraction': 0.01, 'val_top1': 0.12080000340938568, 'val_top5': 0.30660000443458557, 'test_top1': 0.13130000233650208, 'test_top5': 0.31790000200271606, 'info': '{"weight_decay": 0.0, "val_by_wd": {"0.0": 0.12080000340938568, "0.0001": 0.12080000340938568, "0.001": 0.12080000340938568}}'}
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py:321: The number of training batches (9) is smaller than the logging interval Trainer(log_every_n_steps=20). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py:538: Found 7 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=167` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=167` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=167` reached.
+Training is done.
+{'tag': 'supervised@conv', 'dataset': 'cifar100', 'protocol': 'linear_probe', 'label_fraction': 0.1, 'val_top1': 0.2648000121116638, 'val_top5': 0.5424000024795532, 'test_top1': 0.27309998869895935, 'test_top5': 0.5426999926567078, 'info': '{"weight_decay": 0.0, "val_by_wd": {"0.0": 0.2648000121116638, "0.0001": 0.2648000121116638, "0.001": 0.2648000121116638}}'}
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py:538: Found 7 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+{'tag': 'supervised@conv', 'dataset': 'cifar100', 'protocol': 'linear_probe', 'label_fraction': 1.0, 'val_top1': 0.4153999984264374, 'val_top5': 0.7057999968528748, 'test_top1': 0.41679999232292175, 'test_top5': 0.7013999819755554, 'info': '{"weight_decay": 0.001, "val_by_wd": {"0.0": 0.41519999504089355, "0.0001": 0.41519999504089355, "0.001": 0.4153999984264374}}'}
+
+Test results:
+  supervised@conv tiny_imagenet  knn           1.0   top-1 0.200  top-5 0.389
+  supervised@conv tiny_imagenet  linear_probe  0.01  top-1 0.079  top-5 0.220
+  supervised@conv tiny_imagenet  linear_probe  0.1   top-1 0.173  top-5 0.375
+  supervised@conv tiny_imagenet  linear_probe  1.0   top-1 0.275  top-5 0.515
+  supervised@conv cifar100       knn           1.0   top-1 0.289  top-5 0.545
+  supervised@conv cifar100       linear_probe  0.01  top-1 0.131  top-5 0.318
+  supervised@conv cifar100       linear_probe  0.1   top-1 0.273  top-5 0.543
+  supervised@conv cifar100       linear_probe  1.0   top-1 0.417  top-5 0.701

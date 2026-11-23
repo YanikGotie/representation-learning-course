@@ -1,0 +1,11 @@
+# A2/A4/A5: figures and tables for the report -> results/figures/
+MODEL_NAME: analyze
+RUN_NAME: analyze
+ENCODERS:
+  dae: checkpoints/pretrain_dae/encoder.pt
+  ae: checkpoints/pretrain_ae/encoder.pt
+  supervised: checkpoints/supervised/encoder.pt
+  random: random
+  pixels: pixels
+LATENT_DIM_FROM: checkpoints/pretrain_dae/encoder.pt
+ANALYSES: [tuning, table, label_efficiency, rank_agreement, layer, tsne, retrieval, per_class, reconstructions, robustness]

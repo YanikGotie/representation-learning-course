@@ -1,0 +1,6 @@
+# A3: the full protocol for the DAE: k-NN, linear probe and fine-tuning at 1/10/100% of the labels,
+# on Tiny-ImageNet and CIFAR-100 (transfer).
+MODEL_NAME: evaluate
+RUN_NAME: evaluate_dae
+TAG: dae
+ENCODER_PATH: checkpoints/pretrain_dae/encoder.pt

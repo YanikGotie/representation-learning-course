@@ -1,0 +1,5 @@
+# A3 baseline: the plain AE (what corruption adds), full protocol.
+MODEL_NAME: evaluate
+RUN_NAME: evaluate_ae
+TAG: ae
+ENCODER_PATH: checkpoints/pretrain_ae/encoder.pt

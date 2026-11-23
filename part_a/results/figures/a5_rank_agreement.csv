@@ -1,0 +1,13 @@
+dataset,a,b,n_models,kendall_tau,ranking_a,ranking_b
+cifar100,knn,linear_probe@100%,5,0.39999999999999997,supervised > dae > pixels > ae > random,supervised > dae > random > ae > pixels
+cifar100,knn,finetune@100%,3,-0.33333333333333337,supervised > dae > ae,dae > ae > supervised
+cifar100,knn,finetune@1%,3,-1.0,supervised > dae > ae,ae > dae > supervised
+cifar100,linear_probe@100%,finetune@100%,3,-0.33333333333333337,supervised > dae > ae,dae > ae > supervised
+cifar100,linear_probe@100%,finetune@1%,3,-1.0,supervised > dae > ae,ae > dae > supervised
+cifar100,finetune@100%,finetune@1%,3,0.33333333333333337,dae > ae > supervised,ae > dae > supervised
+tiny_imagenet,knn,linear_probe@100%,5,0.9999999999999999,supervised > dae > pixels > ae > random,supervised > dae > pixels > ae > random
+tiny_imagenet,knn,finetune@100%,3,-0.33333333333333337,supervised > dae > ae,ae > supervised > dae
+tiny_imagenet,knn,finetune@1%,3,-1.0,supervised > dae > ae,ae > dae > supervised
+tiny_imagenet,linear_probe@100%,finetune@100%,3,-0.33333333333333337,supervised > dae > ae,ae > supervised > dae
+tiny_imagenet,linear_probe@100%,finetune@1%,3,-1.0,supervised > dae > ae,ae > dae > supervised
+tiny_imagenet,finetune@100%,finetune@1%,3,0.33333333333333337,ae > supervised > dae,ae > dae > supervised

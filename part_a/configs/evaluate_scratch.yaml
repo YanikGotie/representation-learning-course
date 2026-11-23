@@ -1,0 +1,7 @@
+# A3 baseline: SupervisedEncoder trained from scratch on the SAME class-balanced label subsets
+# (1/10/100%) and with the same recipe as the fine-tuned DAE. Rows are tagged "supervised".
+MODEL_NAME: finetune
+RUN_NAME: evaluate_scratch
+TAG: supervised
+ENCODER_PATH: random
+LATENT_DIM_FROM: checkpoints/pretrain_dae/encoder.pt

@@ -1,0 +1,6 @@
+# Sanity baseline: raw pixels (16x16 average-pooled, 768-d), no learning at all.
+MODEL_NAME: evaluate
+RUN_NAME: evaluate_pixels
+TAG: pixels
+ENCODER_PATH: pixels
+PROTOCOLS: [knn, linear_probe]

@@ -1,0 +1,387 @@
+mode=analyze run_name=analyze dataset=tiny_imagenet
+Seed set to 42
+== tuning
+  wrote results/figures/a2_recon_vs_knn.png
+== table
+### Tiny-ImageNet (h = bottleneck): test top-1 / top-5 (%)
+
+| tag        | knn         | linear_probe@1%   | linear_probe@10%   | linear_probe@100%   | finetune@1%   | finetune@10%   | finetune@100%   |
+|:-----------|:------------|:------------------|:-------------------|:--------------------|:--------------|:---------------|:----------------|
+| dae        | 7.1 / 18.1  | 2.3 / 8.6         | 5.6 / 16.8         | 9.4 / 24.9          | 4.2 / 12.8    | 13.7 / 33.0    | 29.7 / 55.1     |
+| ae         | 5.8 / 15.8  | 2.1 / 8.2         | 4.4 / 13.7         | 7.3 / 20.7          | 4.3 / 13.1    | 13.1 / 31.0    | 30.7 / 55.5     |
+| supervised | 27.0 / 50.0 | 13.6 / 33.7       | 24.4 / 48.6        | 29.0 / 53.9         | 4.0 / 12.3    | 12.4 / 30.0    | 30.1 / 55.3     |
+| random     | 4.4 / 12.4  | 2.1 / 7.7         | 4.2 / 13.6         | 7.1 / 20.1          | -             | -              | -               |
+| pixels     | 6.1 / 15.5  | 2.1 / 8.2         | 4.0 / 13.5         | 7.6 / 20.1          | -             | -              | -               |
+
+### CIFAR-100 (transfer) (h = bottleneck): test top-1 / top-5 (%)
+
+| tag        | knn         | linear_probe@1%   | linear_probe@10%   | linear_probe@100%   | finetune@1%   | finetune@10%   | finetune@100%   |
+|:-----------|:------------|:------------------|:-------------------|:--------------------|:--------------|:---------------|:----------------|
+| dae        | 20.1 / 42.8 | 7.0 / 20.9        | 14.5 / 34.4        | 21.3 / 45.5         | 9.6 / 26.9    | 23.5 / 50.5    | 44.9 / 73.5     |
+| ae         | 18.2 / 39.7 | 6.9 / 19.7        | 12.3 / 30.8        | 18.9 / 41.0         | 9.8 / 27.6    | 23.5 / 49.1    | 43.7 / 72.9     |
+| supervised | 34.1 / 60.4 | 14.2 / 35.6       | 29.0 / 57.7        | 37.8 / 67.0         | 9.2 / 25.6    | 22.6 / 47.7    | 43.5 / 72.9     |
+| random     | 17.3 / 38.6 | 6.3 / 19.5        | 13.6 / 34.0        | 19.9 / 43.6         | -             | -              | -               |
+| pixels     | 18.6 / 40.9 | 7.2 / 20.3        | 12.3 / 31.7        | 18.9 / 41.5         | -             | -              | -               |
+
+### Tiny-ImageNet (frozen features from the conv layer (pooled), not h): test top-1 / top-5 (%)
+
+| tag        | knn         | linear_probe@1%   | linear_probe@10%   | linear_probe@100%   |
+|:-----------|:------------|:------------------|:-------------------|:--------------------|
+| dae        | 9.4 / 22.7  | 3.5 / 11.5        | 7.6 / 21.1         | 14.5 / 33.6         |
+| ae         | 10.1 / 23.4 | 4.5 / 13.9        | 9.1 / 24.6         | 17.6 / 38.1         |
+| supervised | 20.0 / 38.9 | 7.9 / 22.0        | 17.3 / 37.5        | 27.5 / 51.5         |
+| random     | 7.7 / 19.3  | 3.7 / 11.9        | 7.6 / 22.0         | 15.5 / 34.2         |
+
+### CIFAR-100 (transfer) (frozen features from the conv layer (pooled), not h): test top-1 / top-5 (%)
+
+| tag        | knn         | linear_probe@1%   | linear_probe@10%   | linear_probe@100%   |
+|:-----------|:------------|:------------------|:-------------------|:--------------------|
+| dae        | 23.7 / 46.9 | 8.2 / 24.4        | 18.5 / 41.8        | 30.3 / 59.2         |
+| ae         | 24.9 / 48.6 | 9.9 / 26.9        | 20.7 / 44.9        | 33.1 / 62.0         |
+| supervised | 28.9 / 54.5 | 13.1 / 31.8       | 27.3 / 54.3        | 41.7 / 70.1         |
+| random     | 20.5 / 41.9 | 8.8 / 25.4        | 18.7 / 41.6        | 31.0 / 58.4         |
+
+  wrote results/figures/a3_results_table.md
+== label_efficiency
+  wrote results/figures/a4_label_efficiency.png
+== rank_agreement
+          dataset                  a                  b  n_models  kendall_tau                                ranking_a                                ranking_b
+0        cifar100                knn  linear_probe@100%         5     0.400000  supervised > dae > pixels > ae > random  supervised > dae > random > ae > pixels
+1        cifar100                knn      finetune@100%         3    -0.333333                    supervised > dae > ae                    dae > ae > supervised
+2        cifar100                knn        finetune@1%         3    -1.000000                    supervised > dae > ae                    ae > dae > supervised
+3        cifar100  linear_probe@100%      finetune@100%         3    -0.333333                    supervised > dae > ae                    dae > ae > supervised
+4        cifar100  linear_probe@100%        finetune@1%         3    -1.000000                    supervised > dae > ae                    ae > dae > supervised
+5        cifar100      finetune@100%        finetune@1%         3     0.333333                    dae > ae > supervised                    ae > dae > supervised
+6   tiny_imagenet                knn  linear_probe@100%         5     1.000000  supervised > dae > pixels > ae > random  supervised > dae > pixels > ae > random
+7   tiny_imagenet                knn      finetune@100%         3    -0.333333                    supervised > dae > ae                    ae > supervised > dae
+8   tiny_imagenet                knn        finetune@1%         3    -1.000000                    supervised > dae > ae                    ae > dae > supervised
+9   tiny_imagenet  linear_probe@100%      finetune@100%         3    -0.333333                    supervised > dae > ae                    ae > supervised > dae
+10  tiny_imagenet  linear_probe@100%        finetune@1%         3    -1.000000                    supervised > dae > ae                    ae > dae > supervised
+11  tiny_imagenet      finetune@100%        finetune@1%         3     0.333333                    ae > supervised > dae                    ae > dae > supervised
+== layer
+[tiny_imagenet] train 90000 | val 10000 | test 10000 | bank 90000
+          tag layer   dim  val_knn_top1
+0         dae  conv  1024        0.0993
+1         dae     h   256        0.0730
+2          ae  conv  1024        0.1119
+3          ae     h   256        0.0627
+4  supervised  conv  1024        0.1967
+5  supervised     h   256        0.2644
+6      random  conv  1024        0.0815
+7      random     h   256        0.0467
+  wrote results/figures/a2_layer_choice.png
+== tsne
+[tiny_imagenet] train 90000 | val 10000 | test 10000 | bank 90000
+  wrote results/figures/a5_tsne.png
+== retrieval
+[tiny_imagenet] train 90000 | val 10000 | test 10000 | bank 90000
+  wrote results/figures/a5_retrieval.png
+== per_class
+[tiny_imagenet] train 90000 | val 10000 | test 10000 | bank 90000
+  wrote results/figures/a5_per_class_scatter.png
+{
+ "linear": {
+  "worst": [
+   [
+    "dumbbell",
+    0.0
+   ],
+   [
+    "syringe",
+    0.0
+   ],
+   [
+    "bighorn",
+    0.0
+   ],
+   [
+    "ox",
+    0.0
+   ],
+   [
+    "chain",
+    0.0
+   ],
+   [
+    "Labrador retriever",
+    0.0
+   ],
+   [
+    "plunger",
+    0.0
+   ],
+   [
+    "standard poodle",
+    0.0
+   ],
+   [
+    "pole",
+    0.0
+   ],
+   [
+    "bannister",
+    0.0
+   ]
+  ],
+  "best": [
+   [
+    "orange",
+    0.42
+   ],
+   [
+    "school bus",
+    0.4
+   ],
+   [
+    "jellyfish",
+    0.4
+   ],
+   [
+    "police van",
+    0.38
+   ],
+   [
+    "lifeboat",
+    0.36
+   ],
+   [
+    "sulphur butterfly",
+    0.34
+   ],
+   [
+    "potpie",
+    0.34
+   ],
+   [
+    "pizza",
+    0.34
+   ],
+   [
+    "flagpole",
+    0.32
+   ],
+   [
+    "bullet train",
+    0.32
+   ]
+  ],
+  "zero_acc_classes": 33
+ },
+ "knn": {
+  "worst": [
+   [
+    "acorn",
+    0.0
+   ],
+   [
+    "potter's wheel",
+    0.0
+   ],
+   [
+    "pop bottle",
+    0.0
+   ],
+   [
+    "bannister",
+    0.0
+   ],
+   [
+    "pill bottle",
+    0.0
+   ],
+   [
+    "picket fence",
+    0.0
+   ],
+   [
+    "pay-phone",
+    0.0
+   ],
+   [
+    "parking meter",
+    0.0
+   ],
+   [
+    "nail",
+    0.0
+   ],
+   [
+    "miniskirt",
+    0.0
+   ]
+  ],
+  "best": [
+   [
+    "freight car",
+    0.5
+   ],
+   [
+    "jellyfish",
+    0.46
+   ],
+   [
+    "gazelle",
+    0.34
+   ],
+   [
+    "dugong",
+    0.32
+   ],
+   [
+    "flagpole",
+    0.3
+   ],
+   [
+    "black widow",
+    0.28
+   ],
+   [
+    "sulphur butterfly",
+    0.28
+   ],
+   [
+    "magnetic compass",
+    0.28
+   ],
+   [
+    "lifeboat",
+    0.26
+   ],
+   [
+    "orange",
+    0.26
+   ]
+  ],
+  "zero_acc_classes": 41
+ }
+}
+== reconstructions
+[tiny_imagenet] train 90000 | val 10000 | test 10000 | bank 90000
+  wrote results/figures/a1_reconstructions.png
+== robustness
+[tiny_imagenet] train 90000 | val 10000 | test 10000 | bank 90000
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:434: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=7` in the `DataLoader` to improve performance.
+<project>/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py:538: Found 7 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+  robustness done: dae
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+  robustness done: ae
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+  robustness done: supervised
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+  robustness done: random
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+GPU available: True (mps), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+Loading `train_dataloader` to estimate number of stepping batches.
+Starting to train!
+`Trainer.fit` stopped: `max_epochs=30` reached.
+Training is done.
+  robustness done: pixels
+  wrote results/figures/a4_robustness.png
+corruption   blur  brightness  contrast  gaussian_noise  occlusion  salt_pepper
+tag                                                                            
+ae          1.084       0.650     0.615           0.939      0.430        0.962
+dae         0.997       0.491     0.453           0.824      0.776        0.838
+pixels      1.034       0.649     0.683           0.948      0.427        0.944
+random      0.993       0.472     0.478           0.676      0.416        0.629
+supervised  0.390       0.542     0.474           0.420      0.330        0.500
+tuning: {'rho': np.float64(-0.1860051185166607), 'p': np.float64(0.32505390180941157), 'n_trials': 30}
+
+Test results:
