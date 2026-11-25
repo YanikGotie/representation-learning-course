@@ -147,8 +147,9 @@ do not change the class. <i>Why it is fair:</i> probe, test images and
 corruption noise (fixed seed) are identical for every model, no probe sees corrupted images, results are relative to
 each model's clean accuracy, and severities follow ImageNet-C [Hendrycks &amp; Dietterich, 2019]. <i>Result:</i>
 under occlusion (10–50% of 8×8 blocks dropped) the DAE keeps 78% of its accuracy on average vs 43% (AE), 43% (pixels)
-and 33% (supervised), and is best even in absolute terms at the highest severity (5.2% vs 3.2% supervised, 1.8% AE):
-filling in masked blocks transferred to missing content at test time. The price is lower tolerance to pixel noise (Gaussian 82%
+and 33% (supervised), and is best even in absolute terms at the highest severity (5.2% vs 3.2% supervised, 1.8% AE).
+This test removes the same 8×8 blocks the DAE was trained to fill in, so it shows robustness to its own training
+corruption, not to an unseen shift, and that robustness does not carry over to the other five corruptions. The price is lower tolerance to pixel noise (Gaussian 82%
 vs AE 94%) and to global photometric changes (contrast 45% vs 61%, brightness 49% vs 65%). The supervised encoder
 collapses under blur and noise (39–42%): it relies on high-frequency texture.</p>
 
